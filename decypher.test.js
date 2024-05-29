@@ -1,7 +1,7 @@
 const utils = require('./decypher.js')
 const fs = require("fs")
 // const read = fs.readFileSync("/home/adrians4957y/Downloads/n.txt","utf-8")
-console.log(utils.autoShift("z",-30,30))
+console.log(utils.autoSezar("OUJPdJ\\M\\J_\\JMOf",-30,30))
 //console.log(utils.autoSezar("Zîw$eäõbû)s½ÙX", -30,30))
 //console.log(utils.vigenere('gwox{RgqssihYspOntqpxs}','blorpy', true));
 //console.log(utils.vigenere('attacking tonight', 'OCULORHINOLARINGOLOGY'));

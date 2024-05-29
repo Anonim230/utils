@@ -7,7 +7,7 @@ const utils = {
      * @param {string} string 
      * @returns {string}
      */
-    sezar: (string, number=0) => {
+    sezar: (string='', number=0) => {
         let output = ''
         for(let i of string){
             output += String.fromCharCode(i.charCodeAt(0)+number)
@@ -30,11 +30,11 @@ const utils = {
      * @param {checkerFunction} checker
      * @returns {string[]} 
      */
-    autoSezar: (string, from=-20, to=20, checker = null) => {
+    autoSezar: (string='', from=0, to=0, checker = null) => {
         const output = {}
         for(let i = from; i <= to; i++){
             try{
-                if(typeof checker == 'function'){
+                if(checker){
                     let toCheck = utils.sezar(string, i);
                     if(checker(toCheck, i-from, string, output)) output[i] = toCheck
                 }else output[i] = utils.sezar(string, i);
@@ -49,7 +49,7 @@ const utils = {
      * @param {string} string 
      * @param {number} number 
      */
-    shifter: (string, number=0) => {
+    shifter: (string='', number=0) => {
         let out = ""
         for(let i of string.split('')){
             let charCode = i.charCodeAt(0);
@@ -74,11 +74,11 @@ const utils = {
      * @param {{[number]:[string]}} output
      * @returns {object}
      */
-    autoShift: (string, from=0, to=16, checker = null) => {
+    autoShift: (string='', from=0, to=0, checker = null) => {
         const output = {}
         for(let i = from; i <= to; i++){
             try{
-                if(typeof checker == 'function'){
+                if(checker){
                     let toCheck = utils.shifter(string, i);
                     if(checker(toCheck, i-from, string, output)) output[i] = toCheck
                 }else output[i] = utils.shifter(string, i);
