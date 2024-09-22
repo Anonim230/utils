@@ -69,7 +69,7 @@ function searchInFile(filePath) {
 const directoryPath = '/home/adrians4957y/Downloads/apk-2';
 searchInFiles(directoryPath);
 // Regex to match numbers of length 4
-var regex = /\b\d{4}\b/g,
+var regex = "flag{" // /\b\d{4}\b/g,
 filters = [
     /** @param {string} line */
     line => line.includes('.line')

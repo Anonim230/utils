@@ -10,7 +10,7 @@ const utils = {
     sezar: (string, number=0) => {
         let output = ''
         for(let i of string){
-            output += String.fromCharCode(i.charCodeAt(0)+number)
+            output += String.fromCharCode(i.charCodeAt(0)+parseInt(number))
         }
         return output
     },
