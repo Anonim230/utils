@@ -6,7 +6,7 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
-let input = [], inputEnded = false, output, funcList = {
+let input = [], output = [], funcList = {
     "-s": utils.autoSezar,
     "--sezar": utils.autoSezar,
     "-c": utils.autoShift,
@@ -16,67 +16,36 @@ let input = [], inputEnded = false, output, funcList = {
     "-v": utils.vigenere,
     "--vigenere": utils.vigenere,
     "-f": (_path, encoding = 'utf-8') => readFileSync(_path,encoding)
-}, temp
-for(let i of process.argv.filter((_,i) => i > 1)){
-    if(!inputEnded && !i.startsWith('-'))input.push(i)
-    else {
-        inputEnded = true 
-        if(typeof funcList[i] != 'function')continue
-        for(let j = 0; j < input.length; j += funcList[i].length){
-            temp = funcList[i](...input.splice(0, funcList[i].length))
-            // log(input.splice(j, j+funcList[i].length))
-        }
-        // log(temp, input,funcList[i], i)
-        if(temp instanceof Array)input = temp
-        else if(temp instanceof Object)input = Object.values(temp)
-        else input = [temp]
+}, lastCommand = '', args = []
+const argc = process.argv.splice(2)
+// log(process.arch, process.argv,process.argv0, argc)
+for(let arg of argc) parseArg(arg)
+if(lastCommand)input = executeCommand(funcList[lastCommand], input, args)
+log(input)
+function parseArg(arg){
+    log(arg, input, lastCommand)
+    if(lastCommand == '-f' || lastCommand == '--file'){ lastCommand = ''; return input.push(readFileSync(arg, 'utf-8')) }
+    if(arg[0] != '-') {
+        if(lastCommand == "")return input.push(arg);
+        return args.push(arg);
     }
-    /*
-        inputEnded = true
-        if(funcList[i])temp = funcList[i](...input)
-        log(temp)
-        if(temp instanceof Array)input = temp
-        else if(temp instanceof Object)input = Object.values(temp)
-        else input = [temp]
-    */
+    if(lastCommand in funcList)input = executeCommand(funcList[lastCommand], input, args)
+        lastCommand = arg
 }
-console.log(input, output, typeof utils.autoSezar)
-console.log(`Hello, welcome to decypher.js\nWhat do you want to use?`)
+/**
+ * 
+ * @param {function} command 
+ * @param {string[]} inputList 
+ * @param {string[]} args 
+ */
+function executeCommand(command, inputList, args){
+    let output = []
+    log(inputList,args,command(inputList[0], ...args))
+    for(let input of inputList) {
+        temp = command(input, ...args)
+        if(temp.join) output.push(...temp)
+        else output.push(temp)
+    }
+    return output
+}
 rl.close()
-// rl.question(`Good morning`, name =>{
-//     console.log("Hello",name);
-// })
-// while(true){
-
-// }
-/*
-let globalSettings = {
-    commands: [],
-    inputs: []
-}
-process.argv.forEach(arg => {
-    console.log(arg);
-    if(arg[0] != '-') return globalSettings.inputs.push(arg)
-    if(arg[1] == '-')
-        switch(arg){
-            case '--sezar': globalSettings.commands.push('sezar'); return;
-            case '-caesar': globalSettings.commands.push('shifter'); return;
-            case '--shifter': globalSettings.commands.push('shifter'); return;
-            case '--vigenere': globalSettings.commands.push('vigenere'); return;
-        }
-    switch(arg){
-        case '-s': globalSettings.commands.push('sezar'); return;
-        case '-c': globalSettings.commands.push('shifter'); return;
-        case '-sh': globalSettings.commands.push('shifter'); return;
-        case '-vig': globalSettings.commands.push('vigenere'); return;
-    }
-    switch(arg){
-        case '-As': globalSettings.commands.push('autoSezar'); return;   
-        case '-Ac': globalSettings.commands.push('autoShifter'); return;       
-    }
-})
-let output = globalSettings.commands.reduce((inputs, command) => {
-    console.log(command, inputs);
-    return utils[command](inputs)
-}, globalSettings.inputs.slice(2))
-*/
